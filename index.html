@@ -157,11 +157,14 @@
     <div id="productsList"></div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.ready();
+        // Безопасная инициализация Telegram Web App (работает и в ТГ, и в браузере без ошибок)
+        const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+        if (tg) {
+            tg.expand();
+            tg.ready();
+        }
 
-        // Замените на URL вашей развернутой Supabase Edge Function
+        // Адрес вашей Edge-функции в Supabase
         const FUNCTION_URL = 'https://aqfxxgcnsjvucxhhagrt.supabase.co/functions/v1/admin-panel';
 
         async function loadProducts() {
@@ -240,7 +243,7 @@
                 
                 if (result.success) {
                     // Тактильный отклик в Telegram (вибрация при успешном сохранении)
-                    if (tg.HapticFeedback) {
+                    if (tg && tg.HapticFeedback) {
                         tg.HapticFeedback.notificationOccurred('success');
                     }
                 } else {
